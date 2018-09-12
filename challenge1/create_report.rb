@@ -14,14 +14,14 @@ def read_file_source1(path_infile)
   raw_lines.each_with_index do |line, idx|
     raw_entry = line.chomp.split(",")
     raw_field1 = raw_entry[1].split("_")
-    entry = {}
-
-    entry["id"] = idx
-    entry["campaign_id"] = raw_entry[0]
-    entry["state"] = raw_field1[0]
-    entry["hair_color"] = raw_field1[1]
-    entry["age_range"] = raw_field1[2]
-    entry["impressions"] = raw_entry[2].to_i
+    entry = {
+      "id": idx,
+      "campaign_id": raw_entry[0],
+      "state": raw_field1[0],
+      "hair_color": raw_field1[1],
+      "age_range": raw_field1[2],
+      "impressions": raw_entry[2].to_i
+    }
 
     result << entry
   end
@@ -66,14 +66,14 @@ def read_file_source2(path_infile)
     raw_entry_part1 = line.chomp[0..(beg_index_of_part2 - 2)].split(",")
     raw_entry_part2 = line.chomp[beg_index_of_part2..(-1)]
 
-    entry = {}
-
-    entry["id"] = idx
-    entry["campaign_id"] = raw_entry_part1[0]
-    entry["ad_type"] = raw_entry_part1[1]
-    entry["date"] = raw_entry_part1[2]
-    entry["spend"] = raw_entry_part1[3].to_i
-    entry["actions"] = process_raw_entry_part2(raw_entry_part2)
+    entry = {
+      "id": idx,
+      "campaign_id": raw_entry_part1[0],
+      "ad_type": raw_entry_part1[1],
+      "date": raw_entry_part1[2],
+      "spend": raw_entry_part1[3].to_i,
+      "actions": process_raw_entry_part2(raw_entry_part2)
+    }
 
     result << entry
   end
@@ -90,6 +90,14 @@ def create_report
 end
 
 create_report()
+
+# ---
+# I intend to make a solve all of the questions using naive solutions in a first pass, then
+#  going through one or more additional times to change how source1 and 2 are stored in order
+#  to solve the questions in a (potentially) more optimal time.
+#
+# There are only 10k records in each data file.  If not many
+# ---
 
 # Some things I've learned from analyzing the dataset in source2:
 #
