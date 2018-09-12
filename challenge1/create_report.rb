@@ -100,7 +100,7 @@ def question1(source1, source2)
   total_spend
 end
 
-def question2(source1, source2)
+def question2(source2)
   campaigns_more_than_4_days = 0
 
   # Sort source2 by campaign_id.  For each campaign id, we will have to find the number of entries with the same
@@ -135,6 +135,50 @@ def question2(source1, source2)
   campaigns_more_than_4_days
 end
 
+def question3(source2)
+  source_h_num_of_clicks = 0
+
+  source2.each do |entry|
+    entry[:actions].each do |action|
+      if action[:source] == "H" && action[:action_type] == "clicks"
+        source_h_num_of_clicks+=1
+      end
+    end
+  end
+
+  source_h_num_of_clicks
+end
+
+def question4(source2)
+  # An object keyed at the top-level by source
+  #   Each source has a subkey for each of :junk and :noise that counts the number of occurrences
+  source_count = {}
+
+  # Count the number of times each source reports junk and noise
+  source2.each do |entry|
+    entry[:actions].each do |action|
+      if action[:action_type] == "junk" || action[:action_type] == "noise"
+        source_count[action[:source]] = {} if !source_count[action[:source]]
+        if source_count[action[:source]][action[:action_type]]
+          source_count[action[:source]][action[:action_type]]+=1
+        else
+          source_count[action[:source]][action[:action_type]]=1
+        end
+      end
+    end
+  end
+
+  sources_reporting_more_junk_than_noise = []
+
+  source_count.each do |source, junk_noise_count|
+    if junk_noise_count["junk"] > junk_noise_count["noise"]
+      sources_reporting_more_junk_than_noise << source
+    end
+  end
+
+  sources_reporting_more_junk_than_noise
+end
+
 def create_report
   source1 = read_file_source1("source1.csv")
   source2 = read_file_source2("source2.csv")
@@ -146,7 +190,9 @@ def create_report
   # end
 
   # p question1(source1, source2)
-  p question2(source1, source2)
+  # p question2(source2)
+  # p question3(source2)
+  # p question4(source2)
 
 end
 
