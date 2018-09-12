@@ -81,11 +81,72 @@ def read_file_source2(path_infile)
   result
 end
 
+def question1(source1, source2)
+  purple_hair_campaign_ids = []
+  total_spend = 0
+
+  source1.each do |entry|
+    if entry[:hair_color] == "purple"
+      purple_hair_campaign_ids << entry[:campaign_id]
+    end
+  end
+
+  source2.each do |entry|
+    if purple_hair_campaign_ids.include?(entry[:campaign_id])
+      total_spend+=entry[:spend]
+    end
+  end
+
+  total_spend
+end
+
+def question2(source1, source2)
+  campaigns_more_than_4_days = 0
+
+  # Sort source2 by campaign_id.  For each campaign id, we will have to find the number of entries with the same
+  #  campaign_id but different dates.  If source2 is sorted by campaign_id, we will only have to look at surrounding
+  #  entries to make our determination instead of all of the records in source 2.
+
+  source2_sorted = source2.sort{ |x, y| x[:campaign_id] <=> y[:campaign_id] }
+
+  i = 0
+  while i < (source2_sorted.length - 1)
+    target_campaign_id = source2_sorted[i][:campaign_id]
+    campaign_dates = [source2_sorted[i][:date]]
+    i+=1
+
+    exit_condition = false
+    while !exit_condition && i < source2_sorted.length
+      current_campaign_id = source2_sorted[i][:campaign_id]
+      campaign_dates << source2_sorted[i][:date] if !campaign_dates.include?(source2_sorted[i][:date])
+
+      # exit condition true when i exceeds bounds OR campaign == 5 dates OR last_campaign_id != current_campaign_id
+      if campaign_dates.length > 4
+        campaigns_more_than_4_days+=1
+        exit_condition = true
+      elsif (current_campaign_id != target_campaign_id) || (i >= source2_sorted.length)
+        exit_condition = true
+      else
+        i+=1
+      end
+    end
+  end
+
+  campaigns_more_than_4_days
+end
 
 def create_report
   source1 = read_file_source1("source1.csv")
   source2 = read_file_source2("source2.csv")
 
+  # i = 0
+  # while i < 5
+  #   p source1[i]
+  #   i+=1
+  # end
+
+  # p question1(source1, source2)
+  p question2(source1, source2)
 
 end
 
