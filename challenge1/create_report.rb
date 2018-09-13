@@ -1,34 +1,15 @@
+# Opens a file and returns an array
+#   The array contains each line of the file in-order as a string
 def read_file(path_infile)
   infile = File.open(path_infile, 'r')
-  raw_lines = infile.readlines
+  lines = infile.readlines
   infile.close
 
-  raw_lines.shift # Dump the first line which has identifiers but no data
-  raw_lines
+  lines.shift # Dump the first line which has identifiers but no data
+  lines
 end
 
-def read_file_source1(path_infile)
-  raw_lines = read_file(path_infile)
-  result = []
-
-  raw_lines.each_with_index do |line, idx|
-    raw_entry = line.chomp.split(",")
-    raw_field1 = raw_entry[1].split("_")
-    entry = {
-      "id": idx,
-      "campaign_id": raw_entry[0],
-      "state": raw_field1[0],
-      "hair_color": raw_field1[1],
-      "age_range": raw_field1[2],
-      "impressions": raw_entry[2].to_i
-    }
-
-    result << entry
-  end
-
-  result
-end
-
+# Receives a string containing a single action and returns an object
 def process_action(raw_action)
   temp = raw_action.delete("\"[] ").split(",")
   action = {
@@ -40,8 +21,9 @@ def process_action(raw_action)
   action
 end
 
-# Parse out each individual action per entry from source2
-def process_raw_entry_part2(raw_entry)
+# Receives a string of multiple actions and returns an array of actions
+#   where each action is an object
+def process_actions(raw_entry)
   raw_action_string = ""
   actions = []
 
@@ -57,25 +39,51 @@ def process_raw_entry_part2(raw_entry)
   actions
 end
 
-def read_file_source2(path_infile)
-  raw_lines = read_file(path_infile)
+# Reads source1.csv, then returns an array of objects, each object
+#   representing a row in the file
+def read_file_source1(path_infile)
+  lines = read_file(path_infile)
   result = []
 
-  raw_lines.each_with_index do |line, idx|
-    beg_index_of_part2 = line.index("\"[{")
-    raw_entry_part1 = line.chomp[0..(beg_index_of_part2 - 2)].split(",")
-    raw_entry_part2 = line.chomp[beg_index_of_part2..(-1)]
-
-    entry = {
+  lines.each_with_index do |line_str, idx|
+    line_arr = line_str.chomp.split(",")
+    audience_arr = line_arr[1].split("_")
+    line_obj = {
       "id": idx,
-      "campaign_id": raw_entry_part1[0],
-      "ad_type": raw_entry_part1[1],
-      "date": raw_entry_part1[2],
-      "spend": raw_entry_part1[3].to_i,
-      "actions": process_raw_entry_part2(raw_entry_part2)
+      "campaign_id": line_arr[0],
+      "state": audience_arr[0],
+      "hair_color": audience_arr[1],
+      "age_range": audience_arr[2],
+      "impressions": line_arr[2].to_i
     }
 
-    result << entry
+    result << line_obj
+  end
+
+  result
+end
+
+# Reads source2.csv, then returns an array of objects, each object
+#   representing a row in the file, each action is an embedded object
+def read_file_source2(path_infile)
+  lines = read_file(path_infile)
+  result = []
+
+  lines.each_with_index do |line_str, idx|
+    beg_index_of_part2 = line_str.index("\"[{")
+    line_arr_part1 = line_str.chomp[0..(beg_index_of_part2 - 2)].split(",")
+    line_arr_part2 = line_str.chomp[beg_index_of_part2..(-1)]
+
+    line_obj = {
+      "id": idx,
+      "campaign_id": line_arr_part1[0],
+      "ad_type": line_arr_part1[1],
+      "date": line_arr_part1[2],
+      "spend": line_arr_part1[3].to_i,
+      "actions": process_actions(line_arr_part2)
+    }
+
+    result << line_obj
   end
 
   result
