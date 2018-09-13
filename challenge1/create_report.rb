@@ -10,8 +10,8 @@ def read_file(path_infile)
 end
 
 # Receives a string containing a single action and returns an object
-def process_action(raw_action)
-  temp = raw_action.delete("\"[] ").split(",")
+def process_action(input_action_string)
+  temp = input_action_string.delete("\"[] ").split(",")
   action = {
     "source": temp[0].split(":")[0],
     "value": temp[0].split(":")[1].to_i,
@@ -23,17 +23,17 @@ end
 
 # Receives a string of multiple actions and returns an array of actions
 #   where each action is an object
-def process_actions(raw_entry)
-  raw_action_string = ""
+def process_actions(input_actions_string)
+  action_string = ""
   actions = []
 
   beg_idx = 2
-  fin_idx = raw_entry.index("}")
+  fin_idx = input_actions_string.index("}")
   while beg_idx
-    raw_action_string = raw_entry[(beg_idx+1)..(fin_idx-1)]
-    beg_idx = raw_entry.index("{", fin_idx)
-    fin_idx = raw_entry.index("}", beg_idx) if beg_idx
-    actions << process_action(raw_action_string)
+    action_string = input_actions_string[(beg_idx+1)..(fin_idx-1)]
+    beg_idx = input_actions_string.index("{", fin_idx)
+    fin_idx = input_actions_string.index("}", beg_idx) if beg_idx
+    actions << process_action(action_string)
   end
 
   actions
@@ -144,17 +144,17 @@ def question2(source2)
 end
 
 def question3(source2)
-  source_h_num_of_clicks = 0
+  number_of_times_source_h_reported_clicks = 0
 
   source2.each do |entry|
     entry[:actions].each do |action|
       if action[:source] == "H" && action[:action_type] == "clicks"
-        source_h_num_of_clicks+=1
+        number_of_times_source_h_reported_clicks+=1
       end
     end
   end
 
-  source_h_num_of_clicks
+  number_of_times_source_h_reported_clicks
 end
 
 def question4(source2)
@@ -268,12 +268,12 @@ def create_report
   source1 = read_file_source1("source1.csv")
   source2 = read_file_source2("source2.csv")
 
-  p question1(source1, source2)
-  p question2(source2)
-  p question3(source2)
-  p question4(source2)
-  p question5(source2)
-  p question6(source1, source2)
+  p "The total spent against people with purple hair is #{question1(source1, source2)}."
+  p "#{question2(source2)} campaigns spent on more than 4 days."
+  p "Source H reported clicks #{question3(source2)} times."
+  p "Sources #{question4(source2)} reported more junk than noise."
+  p "The total cost for all video ads is #{question5(source2)}."
+  p "There were #{question6(source1, source2)} source B conversions for campaigns targeting NY."
   p question7(source1, source2)
 end
 
@@ -282,12 +282,6 @@ create_report()
 fin = Time.now
 
 p "The program took #{fin - beg} seconds to process."
-
-# ---
-# I intend to make a solve all of the questions using naive solutions in a first pass, then
-#  going through one or more additional times to change how source1 and 2 are stored in order
-#  to solve the questions in a (potentially) more optimal time.
-# ---
 
 # Some things I've learned from analyzing the dataset in source2:
 #
