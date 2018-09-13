@@ -179,31 +179,106 @@ def question4(source2)
   sources_reporting_more_junk_than_noise
 end
 
+def question5(source2)
+  total_spend = 0
+  total_views = 0
+
+  source2.each do |entry|
+    if entry[:ad_type] == "video"
+      entry[:actions].each do |action|
+        if action[:action_type] == "views"
+          total_spend+=entry[:spend]
+          total_views+=action[:value]
+        end
+      end
+    end
+  end
+
+  (total_spend.to_f/total_views.to_f).round(2)
+end
+
+def question6(source1, source2)
+  campaign_ids_NY = []
+  source_b_conversion_count = 0
+
+  # Find campaign ids targeting NY
+  source1.each do |entry|
+    campaign_ids_NY << entry[:campaign_id] if entry[:state] == "NY" && !campaign_ids_NY.include?(entry[:campaign_id])
+  end
+
+  # Find conversions for the specific campaign_ids
+  source2.each do |entry|
+    if campaign_ids_NY.include?(entry[:campaign_id])
+      entry[:actions].each do |action|
+        # Find actions with source B, then find those with action_type conversions
+        if (action[:source] == "B" && action[:action_type] == "conversions")
+          source_b_conversion_count+=action[:value]
+        end
+      end
+    end
+  end
+
+  source_b_conversion_count
+end
+
+# 7. what combination of state and hair color had the best CPM?
+# CPM => cost(spend) per 1k impressions
+def question7(source1, source2)
+  campaign_ids_shc = {}              # { campaign_id => state+hair_color}
+  shc = ""                           # concatenated string of state+hair_color
+  shc_impressions = Hash.new(0)      # { state+hair_color => total impressions }
+  shc_spend = Hash.new(0)            # { state+hair_color => total spend }
+  shc_best_cpm = []                  # [ shc of best cpm, best cpm value]
+
+  source1.each do |entry|
+    shc = entry[:state]+entry[:hair_color]
+    campaign_ids_shc[entry[:campaign_id]] = shc
+    shc_impressions[shc]+=entry[:impressions]
+  end
+
+  source2.each do |entry|
+    shc = campaign_ids_shc[entry[:campaign_id]]
+    shc_spend[shc]+=entry[:spend]
+  end
+
+  # Find state + hair_color with best CPM
+
+  # Set init condition
+  shc = shc_impressions.keys.first
+  cpm = 1000*shc_spend[shc].to_f/shc_impressions[shc].to_f
+  shc_best_cpm = [shc, cpm]
+
+  shc_impressions.each do |shc, impressions|
+    cpm = 1000*shc_spend[shc].to_f/impressions.to_f
+    shc_best_cpm = [shc, cpm] if cpm > shc_best_cpm[1]
+  end
+
+  "The combination of the state #{shc_best_cpm[0][0..1]} and #{shc_best_cpm[0][2..-1]} hair color had the best CPM."
+end
+
 def create_report
   source1 = read_file_source1("source1.csv")
   source2 = read_file_source2("source2.csv")
 
-  # i = 0
-  # while i < 5
-  #   p source1[i]
-  #   i+=1
-  # end
-
-  # p question1(source1, source2)
-  # p question2(source2)
-  # p question3(source2)
-  # p question4(source2)
-
+  p question1(source1, source2)
+  p question2(source2)
+  p question3(source2)
+  p question4(source2)
+  p question5(source2)
+  p question6(source1, source2)
+  p question7(source1, source2)
 end
 
+beg = Time.now
 create_report()
+fin = Time.now
+
+p "The program took #{fin - beg} seconds to process."
 
 # ---
 # I intend to make a solve all of the questions using naive solutions in a first pass, then
 #  going through one or more additional times to change how source1 and 2 are stored in order
 #  to solve the questions in a (potentially) more optimal time.
-#
-# There are only 10k records in each data file.  If not many
 # ---
 
 # Some things I've learned from analyzing the dataset in source2:
@@ -212,3 +287,14 @@ create_report()
 # 2) value of ad_type field is always either "photo" or "video"
 # 3) the value of every date field is the same length as the other date fields
 # 4) the value in the spend field is variable length: ranges from length 1 to at least 3 digits
+
+
+# 1. what was the total spent against people with purple hair?
+# 2. how many campaigns spent on more than 4 days?
+# 3. how many times did source H report on clicks?
+# 4. which sources reported more "junk" than "noise"?
+# 5. what was the total cost per view for all video ads, truncated to two decimal places?
+# 6. how many source B conversions were there for campaigns targeting NY?
+# 7. what combination of state and hair color had the best CPM?
+#
+# BONUS - include a timestamp of the run time for your solution :)
