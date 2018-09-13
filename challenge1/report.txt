@@ -1,0 +1,23 @@
+# 1. what was the total spent against people with purple hair?
+566512
+
+# 2. how many campaigns spent on more than 4 days?
+255
+
+# 3. how many times did source H report on clicks?
+623
+
+# 4. which sources reported more "junk" than "noise"?
+Sources "F", "J", and "D"
+
+# 5. what was the total cost per view for all video ads, truncated to two decimal places?
+9.80 if we interpret "truncate" as rounding, otherwise 9.79
+
+# 6. how many source B conversions were there for campaigns targeting NY?
+268
+
+# 7. what combination of state and hair color had the best CPM?
+"The combination of the state ME and green hair color had the best CPM."
+
+# BONUS - include a timestamp of the run time for your solution :)
+"The program took 0.640543 seconds to process."
