@@ -1,16 +1,14 @@
 {
-  "name": "darksky",
+  "name": "avgtemp",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "This app will find the average temperature of 3 different locations.",
+  "main": "entry.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Ashil Farahmand",
   "license": "ISC",
   "dependencies": {
-    "jquery": "^3.3.1",
     "redis": "^2.8.0",
     "request": "^2.88.0",
     "zipcodes": "^7.0.0"
