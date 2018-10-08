@@ -1,0 +1,5 @@
+# # User: ubuntu
+# # Server: REDACTED
+# # Password: REDACTED
+# #
+# # Command: ssh ubuntu@REDACTED
