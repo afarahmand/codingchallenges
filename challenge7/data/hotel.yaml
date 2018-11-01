@@ -1,0 +1,22 @@
+hotels:
+  - name: Grand hotel bethesda
+    rooms:
+      - name: Standard suite
+        amenities:
+        - Parking
+        - Internet
+        - Breakfast
+        - Fitness
+      - name: Delux suite
+        amenities:
+        - Parking
+        - Internet
+        - Breakfast
+        - Fitness
+        - Pool
+  - name: Grand hotel calicut
+    rooms:
+      - name: Luxury suite
+        amenities:
+        - Fitness
+        - Pool
