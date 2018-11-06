@@ -1,0 +1,1 @@
+https://github.com/Lighthouse-io/react-visjs-timeline/blob/master/src/index.js
