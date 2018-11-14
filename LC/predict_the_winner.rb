@@ -62,4 +62,29 @@ end
 
 # Is player 1 the winner?
 a = [3606449,6,5,9,452429,7,9580316,9857582,8514433,9,6,6614512,753594,5474165,4,2697293,8,7,1]
-p predict_the_winner(a)
+b = [30000,1,1,1,4000,1,90000,90000,80000,1,1,60000,7000,50000,1,20000,1,1,1]
+# b should be true
+p predict_the_winner(b)
+
+
+
+
+
+# # @param {Integer[]} nums
+# # @return {Boolean}
+#
+# def cost(arr)
+#   return true if arr.length < 3
+#
+#   dp = {}
+#   dp[0] = [num[0], 0]
+#   dp[1] = [[num[0], num[1]].max, [num[0], num[1]].min]
+#
+#   arr[2..-1].each_with_index do |num, idx|
+#     dp[idx+2] =
+#   end
+# end
+#
+# # Is player 1 the winner?
+# a = [3606449,6,5,9,452429,7,9580316,9857582,8514433,9,6,6614512,753594,5474165,4,2697293,8,7,1]
+# p predict_the_winner(a)
