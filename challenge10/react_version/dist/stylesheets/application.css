@@ -1,0 +1,18 @@
+body {
+  font-family: Helvetica neue;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.background-light-gray { background-color: rgb(222, 222, 222); }
+.text-yellow { color: rgb(246, 201, 45); }
+.text-blue { color: rgb(58, 90, 180); }
+.text-green { color: rgb(98, 201, 153); }
+
+
+.content-wide {}
+
+.content-narrow {
+  padding-left: 50px;
+  padding-right: 50px;
+}
